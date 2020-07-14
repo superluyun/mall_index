@@ -2,53 +2,44 @@ import Storage from '@/utils/storage'
 import userApi from '@/api/userApi'
 
 const user = {
-    stata : {
-        token: Storage.get('token') || null,
-        userInfo: ''
+  state : {
+    jwt: Storage.get('jwt') || null,
+    userInfo: ''
+  },
+  mutations:{
+    SET_JWT:(state,jwt) =>{
+      Storage.set('jwt',jwt)
+      state.jwt = jwt
     },
-    mutations:{
-        SET_TOKEN:(state,token) =>{
-            Storage.set('token',token)
-            state.token = token
-        },
-        SET_USER_INFO:(state,userInfo) => {
-            state.userInfo = userInfo
-        }
-    },
-    action:{
-        setToken({ commit }, token) {
-            commit("SET_TOKEN", token);
-        },
-        //用户信息
-        getUserInfo({ commit, state }) {
-            return new Promise((resolve, reject) => {
-              userApi
-                .getInfo({ token: state.token })
-                .then(res => {
-                  if (res.result) {
-                    commit("SET_USER_INFO", res.result.userInfo);
-                  }
-                })
-                .catch(err => {
-                  reject(err);
-                });
-            });
-          },
-        //登出
-        logOut({ commit, state }) {
-            return new Promise((resolve, reject) => {
-            userApi
-                .logOut({ token: state.token })
-                .then(() => {
-                commit("SET_TOKEN", "");
-                Storage.cle();
-                resolve();
-                })
-                .catch(err => {
-                reject(err);
-                });
-            });
-        }
+    SET_USER_INFO:(state,userInfo) => {
+      Storage.set('userinfo',userInfo)
+      state.userInfo = userInfo
     }
+  },
+  action:{
+    setJwt({ commit }, jwt) {
+      commit("SET_JWT", jwt);
+    },
+    //用户信息
+    getUserInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        userApi
+          .getUserInfo()
+          .then(res => {
+            if (res.result) {
+              commit("SET_USER_INFO", res.result.userInfo);
+            }
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    //登出
+    logOut({ commit, state }) {
+      commit("SET_JWT", "");
+      Storage.cle();
+    }
+  }
 }
 export default user

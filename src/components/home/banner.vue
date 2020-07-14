@@ -2,7 +2,7 @@
     <div class="">
         <el-carousel :height="height">
             <el-carousel-item v-for="(v,k) in list" :key="k">
-                <div class="shop_banner" :style="'background-position: center;background-image:url('+v.url+');'"><router-link :to="v.url||'#'"><div style="width:1200px;height:450px;display:block;"></div></router-link></div>
+                <div class="shop_banner" :style="'background-position: center;background-image:url('+v.image+');'"><router-link :to="v.link||'#'"><div style="width:1200px;height:450px;display:block;"></div></router-link></div>
             </el-carousel-item>
         </el-carousel>
     </div>

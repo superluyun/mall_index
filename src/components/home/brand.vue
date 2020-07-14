@@ -1,7 +1,7 @@
 <template>
     <div id="brand" class="width_center_1200">
         <ul>
-            <li class="float_left" v-for="(v,i) in imgs" :key="i"><img :src="v.url" :class="i<4?'img1':'img2'" /></li>
+            <li class="float_left" v-for="(v,i) in brand_list" :key="i"><img :src="v.image" :class="i<4?'img1':'img2'" /></li>
         </ul>
     </div>
 </template>
@@ -24,6 +24,9 @@ export default {
                 {url:'https://zcy-gov-open-doc.oss-cn-north-2-gov-1.aliyuncs.com/1072PT/null/10006214026/20204/d9e07839-d7c4-4eab-a7bc-5673acd2b8eb?x-oss-process=image/quality,Q_80'}
             ]
         }
+    },
+    props:{
+        brand_list:{type:Array}
     }
 }
 </script>

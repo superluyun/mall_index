@@ -13,13 +13,10 @@ const user = {
     });
   },
   //用户信息
-  getInfo({ token }) {
+  getUserInfo() {
     return request({
-      url: "/userInfo",
-      method: "post",
-      params: {
-        token
-      }
+      url: "/user",
+      method: "get",
     });
   },
   //登出

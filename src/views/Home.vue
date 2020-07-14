@@ -3,9 +3,9 @@
     <div class="shop_top"><shop-head></shop-head></div>
     <div><banner :list="banner_list"></banner></div>
     <div class="shop_content">
-      <brand></brand>
+      <brand :brand_list='brand_list'></brand>
       <div v-for="(v,k) in goods_list" :key="k">
-        <shop-product-block :class_info="v.class_info"  :goods_list="v.list" :adv="goods_list_left_adv[k]"></shop-product-block>
+        <shop-product-block :goods_list.sync="v" v-if="v.items.length>0"></shop-product-block>
       </div>
     </div>
   </div>
@@ -13,6 +13,9 @@
 
 <script>
 // @ is an alias to /src
+import storage from '@/utils/storage.js'
+import userApi from '@/api/userApi'
+import goodsApi from '@/api/goodsApi'
 
 export default {
   name: 'Home',
@@ -20,6 +23,7 @@ export default {
     return{
       banner_list:[{url:"/images/banner/banner_home_1.png"},{url:"/images/banner/banner_home_2.png"},{url:"/images/banner/banner_home_3.png"}],
       goods_list:[],
+      brand_list:[],
       goods_list_left_adv:[],
     }
   },
@@ -30,17 +34,41 @@ export default {
     ShopProductBlock: ()=> import('@/components/home/shop_product_block'),
   },
   mounted(){
-    this.get_goods_list()
+    // this.get_goods_list()
+    this.getUserInfo()
+    this.get_goods_list2()
+    // storage.set('jj','wyh')
   },
   methods:{
-    get_goods_list(){
-      this.$axios.get('http://api.qingwuit.com/api/index/get_index_info').then(res=>{
-        this.goods_list = res.data.data.goods_list;
-        this.goods_list_left_adv = res.data.data.goods_list_left_adv
-        console.log( res.data.data.goods_list_left_adv.adv)
+    // get_goods_list(){
+    //   this.$axios.get('http://api.qingwuit.com/api/index/get_index_info').then(res=>{
+    //     this.goods_list = res.data.data.goods_list;
+    //     this.goods_list_left_adv = res.data.data.goods_list_left_adv.adv
+    //     console.log( res.data.data.goods_list_left_adv)
+    //   })
+    // },
+    get_goods_list2(){
+      goodsApi.getIndex().then(res=>{
+        this.goods_list = res.data.goods
+        this.banner_list = res.data.banner.items
+        this.brand_list = res.data.stores.items
       })
-    }
-  }
+    },
+    
+    getUserInfo(){
+      if(this.$route.query.jwt){
+        var jwt = this.$route.query.jwt
+        this.$store.commit('SET_JWT',jwt)
+        userApi.getUserInfo().then(res=>{
+          this.$store.commit('SET_USER_INFO',res.data)
+          // this.$router.push({path:'/'}) // 去除URL中jwt
+        }).catch(err=>{
+          // this.$message.error(err);
+          this.$router.push({path:'/'}) // 去除URL中jwt
+        })
+      }
+    },
+  },
 }
 </script>
 
@@ -48,5 +76,14 @@ export default {
 .shop_content{
   background: #f5f5f5;
   padding:20px 0 60px 0;
+}
+.shop_top{
+  /* position: relative; */
+  /* height:30px; */
+  /* z-index: 666; */
+  /* position: fixed; */
+  /* background-color: #ff0; */
+  /* left:0;
+  right: 0; */
 }
 </style>

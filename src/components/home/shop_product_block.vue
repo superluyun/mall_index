@@ -1,18 +1,18 @@
 <template>
     <div class="shop_product_block width_center_1200">
-        <div class="seckill_title">{{class_info['name']}}<span><router-link :to="'/goods/params/class_id.'+class_info['id']">查看更多</router-link></span></div>
+        <div class="seckill_title">{{goods_list.name}}<span><router-link :to="goods_list.link">查看更多</router-link></span></div>
         <div class="product_left">
-            <el-image src="/images/adv001.jpg" alt="" lazy></el-image>
+            <el-image :src="goods_list.items[0].image" alt="" lazy></el-image>
         </div>
         <div class="product_right">
             <ul>
-                <li v-for="(v,k) in goods_list" :key="k"><router-link :to="'/goods/info/'+v.id">
+                <li v-for="(v,k) in goods_list.items.slice(1,Infinity)" :key="k"><router-link :to="v.link">
                     <div class="product_act_in">
                         <dl>
-                            <dt><el-image :src="v.image" alt="" lazy></el-image></dt>
-                            <dd class="product_title" :title="v.goods_name">{{v.goods_name}}</dd>
-                            <dd class="product_subtitle">{{v.goods_subname}}</dd>
-                            <dd class="product_price">￥{{v.goods_price}}<span>{{v.goods_market_price}}元</span></dd>
+                            <dt><el-image :src="v.goods.image_url" alt="" lazy></el-image></dt>
+                            <dd class="product_title" :title="v.goods.name">{{v.goods.name}}</dd>
+                            <dd class="product_subtitle">{{v.goods.subtitle}}</dd>
+                            <dd class="product_price">￥{{v.goods.sale_price}}<span>{{v.goods.market_price}}元</span></dd>
                         </dl>
                     </div>
                 </router-link></li>
@@ -26,7 +26,7 @@ export default {
     components: {},
     props: {
         goods_list:{
-            type:Array,
+            type:Object,
         },
         class_info:{
             type:Object,
@@ -110,7 +110,7 @@ export default {
         dl dd.product_price{
             margin-top: 10px;
             font-size: 16px;
-            color:#ca151e;
+            color:#f25c19 ;
             line-height: 34px;
             span{
                 font-size: 14px;
@@ -136,7 +136,7 @@ export default {
         padding-right: 15px;
     }
     a:hover{
-        color:#ca151e;
+        color:#f25c19 ;
     }
 }
 </style>

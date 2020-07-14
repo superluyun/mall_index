@@ -1,11 +1,12 @@
 <template>
     <div :class="change_color?'leftbar2':'leftbar'">
+        <!-- {{category}} -->
         <ul>
-            <li class="left_bar_block" v-for="(v,k) in goods_class" :key="k">
-                <div class="class_1"><router-link :to="'/goods/params/class_id.'+v.id">{{v.name}}</router-link></div>
+            <li class="left_bar_block" v-for="(v,k) in category" :key="k">
+                <div class="class_1"><router-link :to="'/goodslist?gid='+v.id">{{v.name}}{{v.id}}</router-link></div>
                 <div class="class_2">
                     <ul>
-                        <li v-for="(vo,key) in v.children" :key="key" v-show="key<3"><router-link :to="'/goods/params/class_id.'+vo.id">{{vo.name}}</router-link></li>
+                        <li v-for="(vo,key) in v.children" :key="key" v-show="key<3"><router-link :to="'/goodslist?cid2='+vo.id">{{vo.name}}{{vo.id}}</router-link></li>
                     </ul>
                 </div>
                 <div class="subbar">
@@ -13,15 +14,13 @@
                         <div class="class2_title"  v-for="(vo,key) in v.children" :key="key">
                             <h4>{{vo.name}}</h4>
                             <ul>
-                                <li v-for="(item,index) in vo.children" :key="index"><router-link :to="'/goods/params/class_id.'+item.id">{{item.name}}</router-link></li>
+                                <li v-for="(item,index) in vo.children" :key="index"><router-link :to="'/goodslist?cid2='+item.id">{{item.name}}{{item.id}}</router-link></li>
                             </ul>
                         </div>
                     </div>
-                    
                 </div>
             </li>
         </ul>
-        
     </div>
 </template>
 
@@ -32,118 +31,13 @@ export default {
         change_color:{
             type:Boolean,
             default:false,
+        },
+        category:{
+            type:Array
         }
     },
     data() {
       return {
-          goods_class:[{
-id: 13,
-pid: 0,
-name: "家用电器",
-thumb: "",
-rate: "0.00",
-tags: "手机,电脑",
-is_sort: 0,
-lev: 0,
-children: [
-{
-id: 19,
-pid: 13,
-name: "大家电",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 1,
-children: [
-{
-id: 43,
-pid: 19,
-name: "洗衣机",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 2
-},
-{
-id: 42,
-pid: 19,
-name: "平板电视",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 2
-},
-{
-id: 24,
-pid: 19,
-name: "空调",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 2
-}
-]
-},
-{
-id: 20,
-pid: 13,
-name: "生活电器",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 1,
-children: [
-{
-id: 23,
-pid: 20,
-name: "电视剧",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 2
-},
-{
-id: 21,
-pid: 20,
-name: "电饭煲",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 2
-}
-]
-},
-{
-id: 22,
-pid: 13,
-name: "节能电器",
-thumb: "",
-rate: "0.00",
-tags: "",
-is_sort: 0,
-lev: 1,
-children: [
-{
-id: 41,
-pid: 22,
-name: "净水器",
-thumb: "",
-rate: "0.00",
-tags: "净水器",
-is_sort: 0,
-lev: 2
-}
-]
-}
-]
-},],
           goods_brand:[],
           goods_brand_adv:{},
       };
@@ -161,9 +55,9 @@ lev: 2
         }
     },
     created() {
-        // this.get_subnav_info();
     },
-    mounted() {}
+    mounted() {
+    }
 };
 </script>
 <style lang="scss" scoped>
@@ -192,7 +86,7 @@ lev: 2
         overflow: hidden;
         box-sizing: border-box;
         width: 240px;
-        height: 24px;
+        min-height: 24px;
         ul:after{
             display: block;
             clear: both;
@@ -271,12 +165,12 @@ lev: 2
     .subbar_subnav{
         margin-left: 20px;
         margin-top: 15px;
-        width: 680px;
+        width: 740px;
         display: block;
         float: left;
         .class2_title{
             h4{
-                width: 60px;
+                width: 100px;
                 text-align: right;
                 float: left;
                 margin-right: 20px;
@@ -297,7 +191,7 @@ lev: 2
                         
                     }
                     a:hover{
-                        color:#ca151e;
+                        color:#f25c19 ;
                     }
                     
                 }
@@ -328,7 +222,7 @@ lev: 2
     // overflow: hidden;
     // padding:0 15px;
     .class_1{
-        padding: 8px 15px 0 15px;
+        padding: 6px 15px 0 15px;
         a{
             // font-weight: bold;
             color:#fff;
@@ -447,7 +341,7 @@ lev: 2
                         
                     }
                     a:hover{
-                        color:#ca151e;
+                        color:#f25c19 ;
                     }
                     
                 }
