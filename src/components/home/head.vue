@@ -18,10 +18,10 @@
       <div class="top_shop_right">
         <ul>
           <li><a href="http://demo.acuit.net" target="_blank">ERP平台</a></li>
-          <li><a :href="`http://192.168.2.119:8080/?jwt=${jwt}`" target="_blank">我的工作台</a></li>
+          <li><a :href="`http://192.168.2.119:8080/?jwt=${jwt}`" target="_blank"><i class="icon iconfont">&#xe600;</i> 我的工作台</a></li>
           <li><a :href="`http://192.168.2.119:8083/#login?redirect=http://192.168.2.119:8082`" v-if="!userInfo.name">登录</a></li>
           <li><a href="http://demo.acuit.net:96/#/register/reg" _blank v-if="!userInfo.name">注册</a></li>
-          <li><a href="tel:400-999-2350">服务热线：400-999-2350</a></li>   
+          <li><a href="tel:400-999-2350"><i class="icon iconfont">&#xe603;</i> 服务热线：400-999-2350</a></li>   
         </ul>
       </div>
     </div>
@@ -30,12 +30,12 @@
     <div class="center_top " v-if="center_top" style="background-color:#fff">
       <div class="width_center_1200">
         <div class="shop_logo float_left">
-          <router-link to="/goodslist"><img width="180px"  height="55px" src="/images/logo_scy.png" alt="食采云商城"></router-link>
+          <router-link to="/"><img width="180px"  height="55px" src="/images/logo_scy.png" alt="食采云商城"></router-link>
         </div>
         <div class="shop_top_seach float_left">
           <ul>
             <li><input class="search_input" type="text" placeholder="花生 瓜子 火腿肠 啤酒 饮料 矿泉水 "></li>
-            <li><button class="search_button" type="button"><i class="icon iconfont">&#xeba0;</i></button></li>
+            <li><button class="search_button" type="button"><i class="icon iconfont">&#xe640;</i></button></li>
             <li>
               <div class="index_my_car">
                 <span><router-link to="/cart/index">我的购物车<i class="icon iconfont">&#xe602;</i></router-link><div class="shop_car_dot"></div></span>

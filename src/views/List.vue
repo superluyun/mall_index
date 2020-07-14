@@ -10,22 +10,62 @@
 
     <div class="goods_where width_center_1200">
       <div class="goods_class">
-        商品分类：
-        <a href='#'>分类一</a>
-        <a href='#'>分类二</a>
+        <ul class="float_left">
+          <li class="float_left">商品分类：</li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          <li class="float_left" ><a href="#">分类二</a></li>
+          <li class="float_left" ><a href="#">分类一</a></li>
+          
+        </ul>
+        <div class="float_right">
+          <el-button icon="el-icon-arrow-down" size="mini">更多</el-button>
+          <!-- <el-button>多选</el-button> -->
+        </div>
       </div>
       <div class="goods_brand">
-        品牌筛选：
-        <a href="#">品牌一</a>
-        <a href="#">品牌二</a>
+        <ul class="float_left">
+          <li class="float_left">品牌筛选：</li>
+          <li class="float_left" ><a href="#">品牌一</a></li>
+          <li class="float_left" ><a href="#">品牌二</a></li>
+        </ul>
+        <div class="float_right">
+          <el-button icon="el-icon-arrow-down" size="mini">更多</el-button>
+          <!-- <el-button>多选</el-button> -->
+        </div>
       </div>
       <div class="goods_screen">
         <ul>
           <li class="float_left">筛选排序：</li>
-          <li class="float_left"><a @click="search_data.sort='normal';search_data.sort_type=''">默认</a><span class="sort_icon"><div class="icon iconfont">&#xe7fe;</div><div class="icon iconfont">&#xe7ff;</div></span></li>
-          <li class="float_left"><a @click="search_data.sort='new';search_data.sort_type=''">新品</a><span class="sort_icon"><div class="icon iconfont">&#xe7fe;</div><div class="icon iconfont">&#xe7ff;</div></span></li>
-          <li class="float_left"><a @click="search_data.sort='sale';search_data.sort_type=''">销量</a><span class="sort_icon"><div class="icon iconfont">&#xe7fe;</div><div class="icon iconfont">&#xe7ff;</div></span></li>
-          <li class="float_left"><a @click="search_data.sort='price';search_data.sort_type=='desc'?search_data.sort_type='desc':search_data.sort_type='asc'">价格</a><span class="sort_icon"><div class="icon iconfont">&#xe7fe;</div><div class="icon iconfont">&#xe7ff;</div></span></li>
+          <li class="float_left">
+            <a @click="search_data.sort='normal';search_data.sort_type=''">默认<span :class="search_data.sort=='normal'?'icon iconfont active':'icon iconfont'">&#xe601;</span></a>            
+          </li>
+          <li class="float_left">
+            <a @click="search_data.sort='new';search_data.sort_type=''">新品<span :class="search_data.sort=='new'?'icon iconfont active':'icon iconfont'">&#xe601;</span></a>            
+          </li>
+          <li class="float_left">
+            <a @click="search_data.sort='sale';search_data.sort_type=''">销量<span :class="search_data.sort=='sale'?'icon iconfont active':'icon iconfont'">&#xe601;</span></a>
+          </li>
+          <li class="float_left">
+            <a @click="search_data.sort='price';search_data.sort_type=='desc'?search_data.sort_type='asc':search_data.sort_type='desc'">
+              价格
+              <span class="sort_icon">
+                <div :class="search_data.sort_type=='asc'?'icon iconfont active':'icon iconfont'">&#xe7fe;</div>
+                <div :class="search_data.sort_type=='desc'?'icon iconfont active':'icon iconfont'">&#xe60d;</div>
+              </span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -37,7 +77,7 @@
             <dt><el-image :src="v.image_url" alt="" lazy></el-image></dt>
             <dd class="title">{{v.name}}</dd>
             <dd class="price">￥{{v.sale_price}}</dd>
-            <dd><span class="icon iconfont">&#xe675; 立即购买</span><span class="icon iconfont">&#xe602; 加入购物车</span></dd>
+            <dd><span class="icon iconfont"> 立即购买</span><span class="icon iconfont">&#xe602; 加入购物车</span></dd>
           </dl>
         </router-link>
       </div>
@@ -84,6 +124,15 @@ export default {
   components:{
     ShopHead: () => import('@/components/home/head'),
   },
+  watch:{
+    search_data:{
+      handler(newdata){
+        // console.log(newdata)
+        this.get_goods_list()
+      },
+      deep:true
+    }
+  }
 }
 </script>
 
@@ -105,6 +154,15 @@ $mincolor: #f25c19 ;
         min-height: 50px;
         border-bottom: 1px solid #efefef;
         box-sizing: border-box;
+        ul{
+          width: 900px;
+          height: 100%;
+        }
+      }
+      .goods_class:after{
+        display: block;
+        clear:both;
+        content:'';
       }
       .goods_brand{
         padding: 10px;
@@ -112,16 +170,25 @@ $mincolor: #f25c19 ;
         border-bottom: 1px solid #efefef;
         box-sizing: border-box;
       }
+      .goods_brand{
+        display: block;
+        clear: both;
+        content: '';
+      }
       .goods_screen{
         padding: 10px;
         min-height: 50px;
         box-sizing: border-box;
+        .active{
+          color:$mincolor
+        }
       }
       a{
         padding: 10px;
       }
       a:hover{
-        color:$mincolor
+        color:$mincolor;
+        cursor: pointer;
       }
     }
     .sort_icon{

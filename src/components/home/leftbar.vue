@@ -3,10 +3,10 @@
         <!-- {{category}} -->
         <ul>
             <li class="left_bar_block" v-for="(v,k) in category" :key="k">
-                <div class="class_1"><router-link :to="'/goodslist?gid='+v.id">{{v.name}}{{v.id}}</router-link></div>
+                <div class="class_1"><router-link :to="'/goodslist?gid='+v.id">{{v.name}}</router-link></div>
                 <div class="class_2">
                     <ul>
-                        <li v-for="(vo,key) in v.children" :key="key" v-show="key<3"><router-link :to="'/goodslist?cid2='+vo.id">{{vo.name}}{{vo.id}}</router-link></li>
+                        <li v-for="(vo,key) in v.children" :key="key" v-show="key<3"><router-link :to="'/goodslist?cid2='+vo.id">{{vo.name}}</router-link></li>
                     </ul>
                 </div>
                 <div class="subbar">
@@ -14,7 +14,7 @@
                         <div class="class2_title"  v-for="(vo,key) in v.children" :key="key">
                             <h4>{{vo.name}}</h4>
                             <ul>
-                                <li v-for="(item,index) in vo.children" :key="index"><router-link :to="'/goodslist?cid2='+item.id">{{item.name}}{{item.id}}</router-link></li>
+                                <li v-for="(item,index) in vo.children" :key="index"><router-link :to="'/goodslist?cid2='+item.id">{{item.name}}</router-link></li>
                             </ul>
                         </div>
                     </div>
