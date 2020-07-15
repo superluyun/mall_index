@@ -29,27 +29,31 @@
           <div class="goods_info_market_price"><span>市场价：</span><div class="overx_goods_info">￥{{goods_info.market_price||'0.00'}}</div></div>
         </div>
         
+        <div class="goods_info_spec">
+          <span class="float_left">规格：</span>
+          <div class="spec_item float_left">
+            <i class="iconfont icon-xuanzegougou"></i>
+          </div>
+        </div>
 
+        <div class="goods_info_num">
+          <div class="goods_info_num_title">购买数量：</div>
+          <el-input-number class="goods_info_num_input" size="mini" :min='0' :max='Number(goods_info.num)' v-model="buy_num" :step="1" step-strictly></el-input-number>
+          <div class="goods_info_num_stock">&nbsp;&nbsp;{{goods_info.num}} 库存</div>
+        </div>
 
-      <div class="goods_info_num">
-        <div class="goods_info_num_title">购买数量：</div>
-        <div class="goods_info_num_jian" @click="change_buy_num(false)"><i class="el-icon-minus"></i></div>
-        <div class="goods_info_num_input"><input v-model="buy_num" type="text" value="1"></div>
-        <div class="goods_info_num_jia" @click="change_buy_num(true)"><i class="el-icon-plus"></i></div>
-        <div class="goods_info_num_stock">&nbsp;&nbsp;{{goods_info.num}} 库存</div>
-        <!-- <div class="clear"></div> -->
+        <div class="goods_info_btn">
+          <el-button type="primary" @click="buy()">立即购买</el-button>
+          <el-button type="primary" @click="add_cart()" plain> <i class="icon iconfont">&#xe6dc;</i> 加入购物车</el-button>
+        </div>
       </div>
 
-      <div class="goods_info_btn">
-        <el-button type="primary" @click="buy()">立即购买</el-button>
-        <el-button type="primary" @click="add_cart()" plain>加入购物车</el-button>
-      </div>
-    </div>
-
-    <div class="content">
       
     </div>
-    </div>
+    <div class="goods_info_content width_center_1200">
+        <div class="goods_info_store float_left"></div>
+        <div class="goods_info_detail float_left"></div>
+      </div>
   </div>
 </template>
 
@@ -143,6 +147,9 @@ export default {
       else
         this.chose_img_pos = 0
     },
+    onchange(val){
+      console.log(arguments)
+    }
   }
 }
 
@@ -288,41 +295,41 @@ export default {
 .after_sale_content{
     font-size: 14px;
 }
-.goods_info_spec{
-    margin-top: 20px;
-    padding-left:10px; 
-    line-height: 20px;
-    color:#666;
-    .spec_list{
-        margin-bottom: 10px;
-        span{float: left;width: 84px;}
-        ul{
-            float: left;
-            li{
-                float: left;
-                color:#666;
-                border:1px solid #e1e1e1;
-                border-radius: 2px;
-                font-size: 12px;
-                padding: 0 8px;
-                margin-right: 10px;
-            }
-            li.red{
-                border:1px solid #f25c19 ;
-                color:#f25c19 ;
-            }
-            li:hover{
-                border:1px solid #f25c19 ;
-                color:#f25c19 ;
-            }
-        }
-    }
-    :after{
-        content:'';
-        display: block;
-        clear:both;
-    }
-}
+// .goods_info_spec{
+//     margin-top: 20px;
+//     padding-left:10px; 
+//     line-height: 20px;
+//     color:#666;
+//     .spec_list{
+//         margin-bottom: 10px;
+//         span{float: left;width: 84px;}
+//         ul{
+//             float: left;
+//             li{
+//                 float: left;
+//                 color:#666;
+//                 border:1px solid #e1e1e1;
+//                 border-radius: 2px;
+//                 font-size: 12px;
+//                 padding: 0 8px;
+//                 margin-right: 10px;
+//             }
+//             li.red{
+//                 border:1px solid #f25c19 ;
+//                 color:#f25c19 ;
+//             }
+//             li:hover{
+//                 border:1px solid #f25c19 ;
+//                 color:#f25c19 ;
+//             }
+//         }
+//     }
+//     :after{
+//         content:'';
+//         display: block;
+//         clear:both;
+//     }
+// }
 .goods_info_text{
     margin-top: 30px;
     .goods_info_text_left{
@@ -347,7 +354,7 @@ export default {
     font-size: 14px;
     
     .goods_info_num{
-        padding: 10px;
+        // padding: 10px;
         margin-top: 10px;
         .goods_info_num_title{
             color:#666;
@@ -366,6 +373,9 @@ export default {
             color:#666;
         }
         .goods_info_num_stock{
+            float: left;
+            width: 100px;
+            margin-left: 10px;
             line-height: 25px;
             color:#999;
         }
@@ -383,10 +393,16 @@ export default {
             color:#666;
         }
     }
-    .goods_info_btn{
-        clear: both;
-        margin-top: 20px;
+    .goods_info_num:after{
+      clear: both;
+      display: block;
+      content: '';
     }
+    .goods_info_btn{
+      clear: both;
+      margin-top: 20px;
+    }
+    
     .goods_info_add_cart,.goods_info_buy{
         line-height: 40px;
         float: left;
@@ -438,6 +454,32 @@ export default {
         // background: url("/pc/summary-bg.jpg");
         background-color: rgba(242,92,25,0.1);
         // opacity: 0.1;
+    }
+    .goods_info_spec{
+      margin: 10px 0;
+      .spec_item{
+        width: 80px;
+        height: 40px;
+        border: 1px solid #f25c19;
+        box-sizing: border-box;
+        position: relative;
+        i{
+          position: absolute;
+          top: 0px;
+          right: -1px;
+          color:#f25c19
+        }
+      }
+      span{
+        margin-right: 10px;
+        line-height: 40px;
+        color:#666
+      }
+    }
+    .goods_info_spec:after{
+      clear: both;
+      display: block;
+      content: '';
     }
     .goods_info_price{
         color:#f25c19 ;
@@ -588,6 +630,24 @@ export default {
                 color:#f25c19 ;
             }
         }
+    }
+}
+.goods_info_content{
+  margin-top: 20px;
+  height: auto;
+  // background-color: #ccc;
+    .goods_info_store{
+      width: 200px;
+      min-height: 300px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    .goods_info_detail{
+      margin-left: 20px;
+      width: 980px;
+      min-height: 800px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 }
 </style>

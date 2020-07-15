@@ -38,7 +38,7 @@
             <li><button class="search_button" type="button"><i class="icon iconfont">&#xe640;</i></button></li>
             <li>
               <div class="index_my_car">
-                <span><router-link to="/cart/index">我的购物车<i class="icon iconfont">&#xe602;</i></router-link><div class="shop_car_dot"></div></span>
+                <span><router-link to="/cart/index">我的购物车<i class="icon iconfont">&#xe642;</i></router-link><div class="shop_car_dot"></div></span>
               </div>
             </li>
           </ul>
