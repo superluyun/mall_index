@@ -6,7 +6,7 @@ import Axios from 'axios'
 import '@/utils/permission'
 
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import '@/assets/theme/index.css'
 import '../public/style.css' // 公共CSS
 import '../public/fonts/iconfont.css' // 阿里图标
 

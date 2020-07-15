@@ -21,5 +21,12 @@ export default {
       method:'get',
       params:data
     })
+  },
+  // 获取商品详情
+  getGoodsInfo(data){
+    return request({
+      url:'/goods/item/'+data,
+      method:'get'
+    })
   }
 };

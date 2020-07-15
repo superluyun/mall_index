@@ -6,7 +6,7 @@
                 <div class="class_1"><router-link :to="'/goodslist?gid='+v.id">{{v.name}}</router-link></div>
                 <div class="class_2">
                     <ul>
-                        <li v-for="(vo,key) in v.children" :key="key" v-show="key<3"><router-link :to="'/goodslist?cid2='+vo.id">{{vo.name}}</router-link></li>
+                        <li v-for="(vo,key) in v.children" :key="key" v-show="key<3"><router-link :to="'/goodslist?cid1='+vo.id">{{vo.name}}</router-link></li>
                     </ul>
                 </div>
                 <div class="subbar">

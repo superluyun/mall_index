@@ -9,7 +9,7 @@
         ref="img"
         @load="!lazyload && imgLoaded($event)"
         :src="!lazyload ? url : (imgLoadedFlag && url)"
-        style="width:100%"
+        style="width:100%;height:400px;"
       />
       <div
         v-if="!hideZoom && imgLoadedFlag &&!hideSelector"

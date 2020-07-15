@@ -12,7 +12,7 @@
             <i class="el-icon-arrow-left"></i>
           </div>
           <ul>
-            <li v-for="(v,k) in goods_info.goods_images_thumb_200" :key="k" @click="click_silde_img(k)" :class="chose_img_pos==k?'border_color':''"><img :src="v" alt=""></li>
+            <li v-for="(v,k) in goods_images_thumb" :key="k" @click="click_silde_img(k)" :class="chose_img_pos==k?'border_color':''"><img :src="v" alt=""></li>
           </ul>
           <div class="pic_zoom_list_right" @click="next_img()">
             <i class="el-icon-arrow-right"></i>
@@ -20,64 +20,42 @@
         </div>
       </div>
 
-    <div class="goods_info_top_right" >
-      <!-- <div class="goods_info_title">{{goods_info.goods_name||'加载中...'}}
-        <p>{{goods_info.goods_subname||'加载中...'}}</p>
-        <div :class="is_fav?'goods_info_sc red_color':'goods_info_sc'" @click="goods_fav()">{{is_fav?'已收藏':'收藏'}}<i class="icon iconfont">&#xe6cf;</i></div>
-      </div>
-      <div class="goods_info_group">
-        <div class="goods_info_price"><span>商城价：</span>￥{{goods_info.goods_price||'0.00'}}</div>
-        <div class="goods_info_market_price"><span>市场价：</span><div class="overx_goods_info">￥{{goods_info.goods_market_price||'0.00'}}</div></div>
-        <div class="goods_info_active"><span>优惠：</span><font class="noy" v-if="goods_info.goods_freight<=0 && goods_info.freight_id<=0">包邮</font><font v-else-if="store_info.free_freight>0">满{{store_info.free_freight}}包邮</font><font class="noz" v-else>暂无优惠</font></div>
-        <div class="goods_info_sale_num">累计销量<font color="#f25c19 ">{{goods_info.goods_sale_num}}</font></div>
-        <div class="goods_info_phone_read">手机查看<i class="icon iconfont">&#xeb9e;</i></div>
-      </div> -->
-      <!-- 参加活动 -->
-      <!-- <div class="goods_info_active">
-        <div class="goods_skill" v-show="goods_info.is_seckill == 1">
-          <span><i class="icon iconfont">&#xe60c;</i></span>
-          <span>参加秒杀活动</span>
-          <span class="span_time">距离结束 {{seckill_hour}} 时 {{seckill_min}} 分 {{seckill_secs}} 秒</span>
+      <div class="goods_info_top_right" >
+        <div class="goods_info_title">{{goods_info.name||'加载中...'}}
+          <p>{{goods_info.subtitle||'加载中...'}}</p>
         </div>
-        <div class="goods_skill tuan_active" v-show="goods_info.is_groupbuy==1">
-          <span><i class="icon iconfont">&#xe8cc;</i></span>
-          <span>参加团购活动</span>
-          <span class="span_time">团购价：￥ {{goods_info.groupbuy_price}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 还差 {{goods_info.groupbuy_use}} / {{goods_info.groupbuy_num}} 人</span>
+        <div class="goods_info_group">
+          <div class="goods_info_price"><span>商城价：</span>￥{{goods_info.price||'0.00'}}</div>
+          <div class="goods_info_market_price"><span>市场价：</span><div class="overx_goods_info">￥{{goods_info.market_price||'0.00'}}</div></div>
         </div>
-      </div> -->
+        
 
-      <!-- <div class="goods_info_spec" v-show="!this.$isEmpty(goods_info.chose_attr)">
-        <div class="spec_list" v-for="(v,k) in goods_info.spec_list" :key="k">
-        <span>{{v.name}}：</span>
-        <ul>
-          <li :class="($isEmpty(val.is_chose) || val.is_chose==false)?'':'red'" v-for="(val,key) in v.list" :key="key" @click="attr_click(k,key)" >{{val.name}}</li>
-        </ul>
-        </div>
-      </div> -->
 
-      <!-- <div class="goods_info_num">
+      <div class="goods_info_num">
         <div class="goods_info_num_title">购买数量：</div>
         <div class="goods_info_num_jian" @click="change_buy_num(false)"><i class="el-icon-minus"></i></div>
         <div class="goods_info_num_input"><input v-model="buy_num" type="text" value="1"></div>
         <div class="goods_info_num_jia" @click="change_buy_num(true)"><i class="el-icon-plus"></i></div>
-        <div class="goods_info_num_stock">&nbsp;&nbsp;{{goods_info.goods_num}} 库存</div>
-        <div class="clear"></div>
-      </div> -->
+        <div class="goods_info_num_stock">&nbsp;&nbsp;{{goods_info.num}} 库存</div>
+        <!-- <div class="clear"></div> -->
+      </div>
 
-      <!-- <div class="goods_info_btn">
-        <div v-show="goods_info.is_groupbuy==1" class="goods_info_add_groupbuy" @click="group_buy()"><i class="icon iconfont">&#xe601;</i>选择团购</div>
-        <div class="goods_info_buy" @click="buy()"><i class="icon iconfont">&#xe675;</i>立即购买</div>
-        <div class="goods_info_add_cart" @click="add_cart()"><i class="icon iconfont">&#xe602;</i>加入购物车</div>
-      </div> -->
-
+      <div class="goods_info_btn">
+        <el-button type="primary" @click="buy()">立即购买</el-button>
+        <el-button type="primary" @click="add_cart()" plain>加入购物车</el-button>
+      </div>
     </div>
-    <div class="clear"></div>
+
+    <div class="content">
+      
+    </div>
     </div>
   </div>
 </template>
 
 
 <script>
+import goodsApi from '@/api/goodsApi.js'
 export default {   
   data(){
     return{
@@ -123,7 +101,8 @@ export default {
     }
   }, 
   created(){
-    this.get_goods_info()
+    // this.get_goods_info()
+    this.get_goods_info2()
   },
   components:{
     ShopHead: () => import('@/components/home/head'),
@@ -141,7 +120,29 @@ export default {
         this.chose_spec = [];
         this.chose_spec_info = {};
       })
-    }
+    },
+    get_goods_info2(){
+      goodsApi.getGoodsInfo(this.$route.query.id).then(res=>{
+        this.goods_info = res.data
+        this.goods_images_thumb = res.data.images.map(item=> item.url);
+      })
+      // console.log(goodsApi)
+    },
+    click_silde_img(k){
+      this.chose_img_pos = k
+    },
+    pre_img(){
+      if(this.chose_img_pos>0)
+        this.chose_img_pos -= 1
+      else
+        this.chose_img_pos = this.goods_images_thumb.length-1
+    },
+    next_img(){
+      if(this.chose_img_pos<(this.goods_images_thumb.length-1))
+        this.chose_img_pos += 1
+      else
+        this.chose_img_pos = 0
+    },
   }
 }
 
@@ -340,6 +341,7 @@ export default {
     }
 }
 .goods_info_top_right{
+    margin-top:20px;
     float: left;
     width: 770px;
     font-size: 14px;
@@ -432,8 +434,10 @@ export default {
         box-sizing: border-box;
         padding: 20px;
         // padding-bottom: 90px;
-        height: 180px;
-        background: url("/pc/summary-bg.jpg");
+        height: 140px;
+        // background: url("/pc/summary-bg.jpg");
+        background-color: rgba(242,92,25,0.1);
+        // opacity: 0.1;
     }
     .goods_info_price{
         color:#f25c19 ;
@@ -533,6 +537,7 @@ export default {
 .goods_info_top_left{
     width: 402px;
     border: 1px solid #efefef;
+    margin-top:20px;
     margin-right: 28px;
     float: left;
     box-sizing: border-box;
