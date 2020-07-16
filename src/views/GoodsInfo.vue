@@ -5,7 +5,7 @@
     <div class="goods_info_top width_center_1200">
       <div class="goods_info_top_left" >
         <div class="goods_image_item">
-          <pic-zoom :url="goods_images_thumb[chose_img_pos]" :highUrl="goods_images[chose_img_pos]"></pic-zoom>
+          <pic-zoom :url="goods_images_thumb[chose_img_pos]+'?x-oss-process=image/resize,h_400,w_400/quality,Q_100'" :highUrl="goods_images[chose_img_pos]"></pic-zoom>
         </div>
         <div class="pic_zoom_list">
           <div class="pic_zoom_list_left" @click="pre_img()">
@@ -29,9 +29,10 @@
           <div class="goods_info_market_price"><span>市场价：</span><div class="overx_goods_info">￥{{goods_info.market_price||'0.00'}}</div></div>
         </div>
         
-        <div class="goods_info_spec">
-          <span class="float_left">规格：</span>
-          <div class="spec_item float_left">
+        <div class="goods_info_spec" v-for="(v,i) in specs" :key="i">
+          <span class="float_left">{{v.spec_name}}：</span>
+          <div :class="vo.is_check?'spec_item float_left checked':'spec_item float_left'" v-for="(vo,index) in v.spec_values" :key="index" @click="spec_check(vo,v.spec_values)">
+            <span>{{vo.name}}</span>
             <i class="iconfont icon-xuanzegougou"></i>
           </div>
         </div>
@@ -51,9 +52,44 @@
       
     </div>
     <div class="goods_info_content width_center_1200">
-        <div class="goods_info_store float_left"></div>
-        <div class="goods_info_detail float_left"></div>
+      <div class="goods_info_store float_left">
+        <div class="store_title">
+          <span>{{store_info.store_name}}</span>
+        </div>
+        <div class="store_score">
+          <ul>
+            <li class="float_left"><span>100</span> <span>质量</span></li>
+            <li class="float_left"><span>100</span> <span>服务</span></li>
+            <li class="float_left"><span>100</span> <span>时间</span></li>
+            <li class="float_left"><span>100</span> <span>价格</span></li>
+          </ul>
+        </div>
+        <div class="store_btn">
+          <div class="store_btn_one">
+            <span><i class="iconfont icon-home"></i>进入店铺</span>
+          </div>
+          <div class="store_btn_two">
+            <span><i class="iconfont icon-dianhua"></i>联系客服</span>
+          </div>
+        </div>
       </div>
+      <div class="goods_info_detail float_left">
+        <div class="info_nav"></div>
+        <div class="info_table">
+          <div class="info_table_title"><span>核心参数</span><span>更多参数</span></div>
+          <div class="info_table_centent">
+            <el-row>
+              <el-col :span="12"><span>商品名称：{{goods_info.name}}</span></el-col>
+              <el-col :span="12"><span>单位：{{goods_info.unit_name}}</span></el-col>
+              <el-col :span="12"><span>品牌：{{goods_info.brand_info.name}}</span></el-col>
+              <!-- <el-col :span="12"><span>商品重量：{{goods_info.name}}</span></el-col>
+              <el-col :span="12"><span>商品编号：{{goods_info.name}}</span></el-col> -->
+            </el-row>
+          </div>
+        </div>
+        <div class="info_img"></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,10 +101,7 @@ export default {
     return{
       activeName:'first',
       goods_id:0,   // 商品ID
-      goods_info:{
-        comment_num:0,
-        goods_images_thumb_200:['/pc/loading_pic_200.png']
-      },
+      goods_info:{},
       store_info:{},
       buy_num:1, // 购买数量
       chose_spec:[], // 选择的规格属性
@@ -76,61 +109,61 @@ export default {
       chose_img_pos:0,
       goods_images_thumb:[],
       goods_images:[],
-      comment_list:[], // 评论
       cart_change:0,
       is_fav:false,
       save_history:true, // 是否需要存储
     //   isSkeleton:false, // false 骨架显示
       comment_image:[],
 
-      // 评论的东西
-      total_data:0, // 总条数
-      page_size:20,
-      current_page:1,
-      comment_type:0,
-      bfb:100,
-      star:5.0,
-      comment_num:{
-        good:0,
-        secondary:0,
-        bad:0,
-        all:0,
-      },
-
-      // 秒杀活动显示
-      seckill_intvalobj:null,
-      seckill_hour:0,
-      seckill_min:0,
-      seckill_secs:0,
+      specs:[],
+      specs_check_list:[]
     }
   }, 
-  created(){
+  mounted(){
     // this.get_goods_info()
-    this.get_goods_info2()
+    this.get_goods_info()
   },
   components:{
     ShopHead: () => import('@/components/home/head'),
     picZoom: () => import('@/components/home/vue-piczoom.vue' )
   },
   methods:{
+    // get_goods_info(){
+    //   this.$axios.post('http://api.qingwuit.com/api/goods/get_goods_info',{goods_id: 33}).then(res=>{
+    //     // console.log(res.data.data.goods_images_thumb)
+    //     this.goods_info = res.data.data;
+    //     this.store_info = res.data.data.store_info;
+    //     this.goods_images_thumb = res.data.data.goods_images_thumb;
+    //     this.goods_images = res.data.data.goods_images;
+    //     this.buy_num = 1; // 初始化购买数量
+    //     this.chose_spec = [];
+    //     this.chose_spec_info = {};
+    //   })
+    // },
     get_goods_info(){
-      this.$axios.post('http://api.qingwuit.com/api/goods/get_goods_info',{goods_id: 33}).then(res=>{
-        // console.log(res.data.data.goods_images_thumb)
-        this.goods_info = res.data.data;
-        this.store_info = res.data.data.store_info;
-        this.goods_images_thumb = res.data.data.goods_images_thumb;
-        this.goods_images = res.data.data.goods_images;
-        this.buy_num = 1; // 初始化购买数量
-        this.chose_spec = [];
-        this.chose_spec_info = {};
-      })
-    },
-    get_goods_info2(){
       goodsApi.getGoodsInfo(this.$route.query.id).then(res=>{
         this.goods_info = res.data
-        this.goods_images_thumb = res.data.images.map(item=> item.url);
+        this.goods_images_thumb = res.data.images.map(item=> item.url)
+        this.goods_images = res.data.images.map(item=>item.url)
+        this.store_info = res.data.store
+        this.specs = this.set_specs(res.data.specs)
+        
       })
       // console.log(goodsApi)
+    },
+    set_specs(specs){
+      specs.forEach(element => {
+        var arr = []
+        element.spec_values.split(',').forEach(item=>{
+          var obj = {}
+          obj.name = item
+          obj.is_check = false
+          obj.spec_id = element.id
+          arr.push(obj)
+        })
+        element.spec_values = arr
+      });
+      return specs
     },
     click_silde_img(k){
       this.chose_img_pos = k
@@ -147,8 +180,16 @@ export default {
       else
         this.chose_img_pos = 0
     },
-    onchange(val){
-      console.log(arguments)
+    spec_check(v,spec_values){
+      spec_values.forEach(item=>{
+        item.is_check = false
+      })
+      v.is_check = !v.is_check
+      var arr = []
+      this.specs.forEach(item=>{
+        arr.push(...item.spec_values.filter(i=> i.is_check))
+      })
+      this.specs_check_list = arr.map(item=>item.name)
     }
   }
 }
@@ -458,20 +499,34 @@ export default {
     .goods_info_spec{
       margin: 10px 0;
       .spec_item{
-        width: 80px;
+        min-width: 80px;
         height: 40px;
-        border: 1px solid #f25c19;
+        color:#3c3c3c;
+        text-align: center;
+        margin-right: 10px;
+        border: 1px solid #e1e1e1;
         box-sizing: border-box;
         position: relative;
         i{
+          display: none;
+        }
+      }
+      .checked{
+        border: 1px solid #f25c19;
+        i{
+          display: block;
           position: absolute;
           top: 0px;
           right: -1px;
-          color:#f25c19
+          color:#f25c19;
         }
       }
+      .spec_item:hover{
+        cursor: pointer;
+        border: 1px solid #f25c19;
+      }
       span{
-        margin-right: 10px;
+        // margin-right: 10px;
         line-height: 40px;
         color:#666
       }
@@ -633,21 +688,121 @@ export default {
     }
 }
 .goods_info_content{
-  margin-top: 20px;
+  margin-top: 40px;
   height: auto;
   // background-color: #ccc;
     .goods_info_store{
-      width: 200px;
+      width: 300px;
       min-height: 300px;
-      border: 1px solid #ccc;
+      border: 1px solid #efefef;
       box-sizing: border-box;
+      .store_title{
+        width: 100%;
+        height: 70px;
+        border-bottom:1px solid #efefef;
+        color: #3c3c3c;
+        line-height: 70px;
+        text-align: center;
+      }
+      .store_score{
+        width: 280px;
+        margin: 25px auto;
+        span{
+          margin: 8px 0;
+          width: 70px;
+          display: block;
+          text-align: center;
+          color:#999
+        }
+        span:first-child{
+          color:#f25c19;
+          font-weight: bold;
+        }
+      }
+      .store_score:after{
+        clear: both;
+        display: block;
+        content: "";
+      }
+      .store_btn{
+        width: 284px;
+        margin: 50px auto;
+        .store_btn_one, .store_btn_two{
+          width: 130px;
+          height: 40px;
+          border:1px solid #e1e1e1;
+          border-radius: 1px;
+          float: left;
+          margin: 0 5px;
+          text-align: center;
+          line-height: 40px;
+          i{
+            margin: 0 3px;
+            color: #fcfcfc;
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            // text-align: center;
+            border-radius: 50%;
+            background-color: #f25c19;
+          }
+        }
+        .store_btn_one:hover,.store_btn_two:hover{
+          cursor: pointer;
+          border:1px solid #f25c19;
+          color: #f25c19;
+        }
+      }
+      .store_btn:after{
+        clear: both;
+        display: block;
+        content:'';
+      }
     }
     .goods_info_detail{
       margin-left: 20px;
-      width: 980px;
+      width: 880px;
       min-height: 800px;
-      border: 1px solid #ccc;
+      border: 1px solid #efefef;
       box-sizing: border-box;
+      .info_nav{
+        height: 70px;
+        width: 100%;
+        border-bottom: 1px solid #efefef;
+      }
+      .info_table{
+        width: 800px;
+        height: 180px;
+        margin: 30px auto;
+        border:1px solid #efefef;
+        // background-color: #f00;
+        .info_table_title{
+          width: 100%;
+          height: 30px;
+          background-color: #efefef;
+          line-height: 30px;
+          font-size: 14px;
+          color:#3c3c3c;
+          display: flex;
+          flex-direction:row;
+          justify-content:space-between;
+          span{
+            margin:0 10px;
+          }
+        }
+        .info_table_centent{
+          width: 100%;
+          // height: 100%;
+          padding: 10px 40px;
+          box-sizing: border-box;
+          color:#999;
+          font-size: 14px;
+          span{
+            line-height:40px;
+          }
+        }
+      }
     }
 }
 </style>
