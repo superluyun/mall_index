@@ -81,13 +81,13 @@
             <el-row>
               <el-col :span="12"><span>商品名称：{{goods_info.name}}</span></el-col>
               <el-col :span="12"><span>单位：{{goods_info.unit_name}}</span></el-col>
-              <el-col :span="12"><span>品牌：{{goods_info.brand_info.name}}</span></el-col>
-              <!-- <el-col :span="12"><span>商品重量：{{goods_info.name}}</span></el-col>
-              <el-col :span="12"><span>商品编号：{{goods_info.name}}</span></el-col> -->
+              <el-col :span="12"><span v-if="goods_info.brand_info">品牌：{{goods_info.brand_info.name}}</span></el-col>
+              <el-col :span="12"><span>商品重量：{{goods_info.name}}</span></el-col>
+              <el-col :span="12"><span>商品编号：{{goods_sn || '请选择商品规格'}}</span></el-col>
             </el-row>
           </div>
         </div>
-        <div class="info_img"></div>
+        <div class="goods_info_intro" v-html="goods_info.intro"></div>
       </div>
     </div>
   </div>
@@ -99,24 +99,17 @@ import goodsApi from '@/api/goodsApi.js'
 export default {   
   data(){
     return{
-      activeName:'first',
-      goods_id:0,   // 商品ID
       goods_info:{},
       store_info:{},
       buy_num:1, // 购买数量
-      chose_spec:[], // 选择的规格属性
-      chose_spec_info:{},
       chose_img_pos:0,
       goods_images_thumb:[],
       goods_images:[],
-      cart_change:0,
-      is_fav:false,
-      save_history:true, // 是否需要存储
-    //   isSkeleton:false, // false 骨架显示
       comment_image:[],
-
       specs:[],
-      specs_check_list:[]
+      specs_check_list:[],
+      goods_sn:'',
+      
     }
   }, 
   mounted(){
@@ -128,18 +121,6 @@ export default {
     picZoom: () => import('@/components/home/vue-piczoom.vue' )
   },
   methods:{
-    // get_goods_info(){
-    //   this.$axios.post('http://api.qingwuit.com/api/goods/get_goods_info',{goods_id: 33}).then(res=>{
-    //     // console.log(res.data.data.goods_images_thumb)
-    //     this.goods_info = res.data.data;
-    //     this.store_info = res.data.data.store_info;
-    //     this.goods_images_thumb = res.data.data.goods_images_thumb;
-    //     this.goods_images = res.data.data.goods_images;
-    //     this.buy_num = 1; // 初始化购买数量
-    //     this.chose_spec = [];
-    //     this.chose_spec_info = {};
-    //   })
-    // },
     get_goods_info(){
       goodsApi.getGoodsInfo(this.$route.query.id).then(res=>{
         this.goods_info = res.data
@@ -190,204 +171,20 @@ export default {
         arr.push(...item.spec_values.filter(i=> i.is_check))
       })
       this.specs_check_list = arr.map(item=>item.name)
-    }
+      this.goods_info.goods.forEach(item=>{
+        if(item.spec_name == this.specs_check_list.join(' ')+' ')
+          this.goods_sn = item.goods_sn
+      })
+    },
+    buy(){},
+    add_cart(){},
   }
 }
 
 </script>
 
 <style lang="scss" scoped>
-    .goods_info_comment_list{
-    ul li{
-        padding-top: 20px;
-        border-bottom: 1px solid #efefef;
-        padding-bottom: 30px;
-        
-    }
-    ul li:after{
-        clear: both;
-        display: block;
-        content:'';
-    }
-    .comment_avatar{
-        width: 40px;
-        height: 40px;
-        float: left;
-        border-radius: 50%;
-        background: #efefef;
-        margin-right: 15px;
-    }
-    .comment_nickname{
-        font-size: 14px;
-        color:#666;
-        font-weight: bold;
-    }
-    .comment_star{
-        height: 30px;
-        font-size: 14px;
-        color:#666;
-        line-height: 30px;
-        font{
-            float: left;
-            margin-right: 10px;
-        }
-        .store_star_in{
-            float: left;
-            margin-top: 5px;
-        }
-    }
-    .comment_content{
-        margin-top: 10px;
-        border-top: 1px dashed #efefef;;
-        padding-top: 10px;
-        margin-left: 55px;
-        font-size: 14px;
-        color:#666;
-    }
-    .comment_images{
-        margin-left: 55px;
-        margin-top: 20px;
-        .comment_image{
-            height: 90px;
-            width: 90px;
-            border:1px solid #efefef;
-            margin-right: 20px;
-            float: left;
-        }
-    }
-}
-.comment_list_top{
-    margin-bottom: 15px;
-    .left_bfb{
-        float: left;
-        font-size: 48px;
-        color:#f25c19 ;
-        line-height: 95px;
-        width: 190px;
-        text-align: center;
-        position: relative;
-        border-right: 1px solid #efefef;
-        padding-right: 35px;
-        span{
-            font-size: 14px;
-            color:#999;
-            position: absolute;
-            top:-16px;
-            left: 140px;
-        }
-    }
-    .right_comment_list{
-        ul li{
-            float: left;
-            line-height: 48px;
-            margin-left: 35px;
-            margin-top: 25px;
-            color:#666;
-            height: 48px;
-            padding:0 40px;
-            font-size: 14px;
-            background: #efefef;
-            border-radius: 3px;
-        }
-        ul li.red{
-            background: #efefef;
-            color:#f25c19 ;
-        }
-        ul li.red:hover{
-            background: #e1e1e1;
-            color:#f25c19 ;
-        }
-        ul li:hover{
-            background: #e1e1e1;
-            color:#666;
-            -webkit-transition: all .2s linear;
-            transition: all .2s linear;
-        }
-    }
-}
-.comment_list_top:after{
-    clear:both;
-    display: block;
-    content:'';
-}
-.goods_info_sc{
-    background: #f6f6f6;
-    border-radius: 6px;
-    font-size: 14px;
-    line-height: 25px;
-    color:#666;
-    position: absolute;
-    top:0;
-    right: 8px;
-    padding:0 10px;
-    i{
-        margin-left: 6px;
-        font-size: 12px;
-    }
-}
-.goods_info_sc.red_color{
-    color:#fff;
-    background: #f25c19 ;
-}
-.goods_info_sc:hover{
-    color:#fff;
-    background: #f25c19 ;
-}
-.after_sale_content{
-    font-size: 14px;
-}
-// .goods_info_spec{
-//     margin-top: 20px;
-//     padding-left:10px; 
-//     line-height: 20px;
-//     color:#666;
-//     .spec_list{
-//         margin-bottom: 10px;
-//         span{float: left;width: 84px;}
-//         ul{
-//             float: left;
-//             li{
-//                 float: left;
-//                 color:#666;
-//                 border:1px solid #e1e1e1;
-//                 border-radius: 2px;
-//                 font-size: 12px;
-//                 padding: 0 8px;
-//                 margin-right: 10px;
-//             }
-//             li.red{
-//                 border:1px solid #f25c19 ;
-//                 color:#f25c19 ;
-//             }
-//             li:hover{
-//                 border:1px solid #f25c19 ;
-//                 color:#f25c19 ;
-//             }
-//         }
-//     }
-//     :after{
-//         content:'';
-//         display: block;
-//         clear:both;
-//     }
-// }
-.goods_info_text{
-    margin-top: 30px;
-    .goods_info_text_left{
-        width: 234px;
-        float: left;
-        margin-right: 20px;
-    }
-    .goods_info_text_right{
-        margin-top: 20px;
-        width: 946px;
-        box-sizing: border-box;
-        min-height: 900px;
-        padding:20px;
-        float: left;
-        border:1px solid #efefef;
-    }
-}
+
 .goods_info_top_right{
     margin-top:20px;
     float: left;
@@ -556,80 +353,9 @@ export default {
             display: inline-block;
         }
     }
-    .goods_info_sale_num{
-        position:absolute;
-        font-size: 12px;
-        right: 16px;
-        color:#333;
-        top: 30px;
-        font{
-            margin-left: 10px;
-            margin-right: 10px;
-        }
-    }
-    .goods_info_phone_read{
-        position:absolute;
-        right: 24px;
-        font-size: 12px;
-        color:#999;
-        top: 140px;
-        i{
-            margin-left: 10px;
-            color:#666;
-        }
-    }
     
-    .goods_info_active{
-        margin-top: 20px;
-        span{
-            color:#999;
-        }
-        font{
-            background: #ff6590;
-            color:#fff;
-            line-height: 34px;
-            padding: 4px 8px;
-            margin-right: 10px;
-            border-radius: 3px;
-        }
-        font.noy{
-            background: #67c23a;
-        }
-        font.noz{
-            background: #999;
-        }
-        .goods_skill{
-            margin-bottom: 10px;
-            background: #fef0f0;
-            border:1px solid  #fde2e2;
-            font-size: 14px;
-            span{
-                color:#f56c6c;
-                line-height: 40px;
-                i{
-                    font-size: 18px;
-                    line-height: 40px;
-                    margin-right: 20px;
-                    margin-left: 20px;
-                    float: left;
-                }
-            }
-            span.span_time{
-                float: right;
-                margin-right: 30px;
-            }
-        }
-        .tuan_active{
-            background: #f0f9eb;
-            border: 1px solid #e1f3d8;
-            span{
-                color:#67c23a;
-            }
-        }
-    }
-}
-.goods_info_top_mbx{
-    margin:30px auto;
+    
+    
 }
 .goods_info_top_left{
     width: 402px;
@@ -802,6 +528,9 @@ export default {
             line-height:40px;
           }
         }
+      }
+      .goods_info_intro{
+        padding: 0 20px;
       }
     }
 }
