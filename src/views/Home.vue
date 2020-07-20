@@ -8,6 +8,7 @@
         <shop-product-block :goods_list.sync="v" v-if="v.items.length>0"></shop-product-block>
       </div>
     </div>
+    <li v-for="(v,i) in index_banner_url" :key="i">{{v.url}}</li>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ export default {
       goods_list:[],
       brand_list:[],
       goods_list_left_adv:[],
+      index_banner_url:[]
     }
   },
   components:{
@@ -38,6 +40,12 @@ export default {
     // this.getUserInfo()
     this.get_goods_list()
     // storage.set('jj','wyh')
+    this.$axios.get('https://www.12306.cn/index/otn/index12306/getBanner')
+    .then(res=>{
+      var that = this
+      
+      that.index_banner_url =  res.data.data.index_banner_url
+    })
   },
   methods:{
     get_goods_list(){
