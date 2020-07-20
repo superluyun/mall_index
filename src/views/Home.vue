@@ -35,19 +35,12 @@ export default {
   },
   mounted(){
     // this.get_goods_list()
-    this.getUserInfo()
-    this.get_goods_list2()
+    // this.getUserInfo()
+    this.get_goods_list()
     // storage.set('jj','wyh')
   },
   methods:{
-    // get_goods_list(){
-    //   this.$axios.get('http://api.qingwuit.com/api/index/get_index_info').then(res=>{
-    //     this.goods_list = res.data.data.goods_list;
-    //     this.goods_list_left_adv = res.data.data.goods_list_left_adv.adv
-    //     console.log( res.data.data.goods_list_left_adv)
-    //   })
-    // },
-    get_goods_list2(){
+    get_goods_list(){
       goodsApi.getIndex().then(res=>{
         this.goods_list = res.data.goods
         this.banner_list = res.data.banner.items
@@ -55,19 +48,7 @@ export default {
       })
     },
     
-    getUserInfo(){
-      if(this.$route.query.jwt){
-        var jwt = this.$route.query.jwt
-        this.$store.commit('SET_JWT',jwt)
-        userApi.getUserInfo().then(res=>{
-          this.$store.commit('SET_USER_INFO',res.data)
-          // this.$router.push({path:'/'}) // 去除URL中jwt
-        }).catch(err=>{
-          // this.$message.error(err);
-          this.$router.push({path:'/'}) // 去除URL中jwt
-        })
-      }
-    },
+    
   },
 }
 </script>

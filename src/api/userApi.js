@@ -20,13 +20,10 @@ const user = {
     });
   },
   //登出
-  logOut({ token }) {
+  logOut() {
     return request({
-      url: "/userLogout",
-      method: "post",
-      params: {
-        token
-      }
+      url: "/logout",
+      method: "post"
     });
   }
 };

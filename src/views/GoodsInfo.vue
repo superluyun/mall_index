@@ -1,7 +1,6 @@
 <template>
   <div class="goods_info">
-    <div class="shop_top"><shop-head></shop-head></div>
-
+    <div class="shop_top"><shop-head :store_info.sync='store_info'></shop-head></div>
     <div class="goods_info_top width_center_1200">
       <div class="goods_info_top_left" >
         <div class="goods_image_item">
@@ -21,12 +20,12 @@
       </div>
 
       <div class="goods_info_top_right" >
-        <div class="goods_info_title">{{goods_info.name||'加载中...'}}
+        <div class="goods_info_title">{{goods_info.name+" "+spec_name||'加载中...'}}
           <p>{{goods_info.subtitle||'加载中...'}}</p>
         </div>
         <div class="goods_info_group">
-          <div class="goods_info_price"><span>商城价：</span>￥{{goods_info.price||'0.00'}}</div>
-          <div class="goods_info_market_price"><span>市场价：</span><div class="overx_goods_info">￥{{goods_info.market_price||'0.00'}}</div></div>
+          <div class="goods_info_price"><span>商城价：</span>￥{{sale_price||goods_info.price}}</div>
+          <div class="goods_info_market_price"><span>市场价：</span><div class="overx_goods_info">￥{{market_price||goods_info.market_price}}</div></div>
         </div>
         
         <div class="goods_info_spec" v-for="(v,i) in specs" :key="i">
@@ -39,8 +38,8 @@
 
         <div class="goods_info_num">
           <div class="goods_info_num_title">购买数量：</div>
-          <el-input-number class="goods_info_num_input" size="mini" :min='0' :max='Number(goods_info.num)' v-model="buy_num" :step="1" step-strictly></el-input-number>
-          <div class="goods_info_num_stock">&nbsp;&nbsp;{{goods_info.num}} 库存</div>
+          <el-input-number class="goods_info_num_input" size="mini" :min='0' :max='Number(num || goods_info.num)' v-model="buy_num" :step="1" step-strictly></el-input-number>
+          <div class="goods_info_num_stock">&nbsp;&nbsp;{{num || goods_info.num}} 库存</div>
         </div>
 
         <div class="goods_info_btn">
@@ -76,13 +75,13 @@
       <div class="goods_info_detail float_left">
         <div class="info_nav"></div>
         <div class="info_table">
-          <div class="info_table_title"><span>核心参数</span><span>更多参数</span></div>
+          <div class="info_table_title"><span>核心参数</span><span></span></div>
           <div class="info_table_centent">
             <el-row>
               <el-col :span="12"><span>商品名称：{{goods_info.name}}</span></el-col>
               <el-col :span="12"><span>单位：{{goods_info.unit_name}}</span></el-col>
               <el-col :span="12"><span v-if="goods_info.brand_info">品牌：{{goods_info.brand_info.name}}</span></el-col>
-              <el-col :span="12"><span>商品重量：{{goods_info.name}}</span></el-col>
+              <el-col :span="12"><span>商品重量：{{unit+'kg'}}</span></el-col>
               <el-col :span="12"><span>商品编号：{{goods_sn || '请选择商品规格'}}</span></el-col>
             </el-row>
           </div>
@@ -109,6 +108,11 @@ export default {
       specs:[],
       specs_check_list:[],
       goods_sn:'',
+      unit:'',// 重量 为什么叫这个 问后端
+      sale_price:'',
+      market_price:'',
+      spec_name:'',
+      num:'',// 库存
       
     }
   }, 
@@ -117,8 +121,8 @@ export default {
     this.get_goods_info()
   },
   components:{
-    ShopHead: () => import('@/components/home/head'),
-    picZoom: () => import('@/components/home/vue-piczoom.vue' )
+    ShopHead: () => import('@/components/store/head'),
+    picZoom: () => import('@/components/home/vue-piczoom.vue')
   },
   methods:{
     get_goods_info(){
@@ -172,8 +176,16 @@ export default {
       })
       this.specs_check_list = arr.map(item=>item.name)
       this.goods_info.goods.forEach(item=>{
-        if(item.spec_name == this.specs_check_list.join(' ')+' ')
+        if(item.spec_name == this.specs_check_list.join(' ')+' '){
           this.goods_sn = item.goods_sn
+          this.unit = item.unit
+          this.sale_price = item.sale_price
+          this.market_price = item.market_price
+          this.spec_name = item.spec_name
+          this.num = item.num
+        }
+          
+          // console.log(item)
       })
     },
     buy(){},
@@ -184,7 +196,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.shop_top{
+  height: 316px;
+}
 .goods_info_top_right{
     margin-top:20px;
     float: left;

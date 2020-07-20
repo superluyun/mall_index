@@ -11,7 +11,7 @@ const routes = [
     component: Home
   },
   {
-    path:'/goodslist',
+    path:'/goodslist/:id',
     name:'List',
     component:()=> import('@/views/List.vue')
   },
@@ -19,17 +19,12 @@ const routes = [
     path:'/goodsinfo',
     name:'Info',
     component:()=>import('@/views/GoodsInfo.vue')
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
-  // base: process.env.BASE_URL,
+  base: process.env.NODE_ENV=='production'?'/admin':'/',
   routes
 })
 

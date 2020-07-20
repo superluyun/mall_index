@@ -15,9 +15,18 @@ export default {
           method:'get'
       })
   },
+  // 列表页
   getList(data){
     return request({
       url:'/goods/search',
+      method:'get',
+      params:data
+    })
+  },
+  // 店铺列表页
+  getStoreList(data,id){
+    return request({
+      url:'/store/goods/'+id,
       method:'get',
       params:data
     })

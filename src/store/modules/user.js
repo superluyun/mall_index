@@ -16,7 +16,7 @@ const user = {
       state.userInfo = userInfo
     }
   },
-  action:{
+  actions:{
     setJwt({ commit }, jwt) {
       commit("SET_JWT", jwt);
     },
@@ -26,8 +26,8 @@ const user = {
         userApi
           .getUserInfo()
           .then(res => {
-            if (res.result) {
-              commit("SET_USER_INFO", res.result.userInfo);
+            if (res.data) {
+              commit("SET_USER_INFO", res.data.userInfo);
             }
           })
           .catch(err => {
@@ -37,8 +37,15 @@ const user = {
     },
     //登出
     logOut({ commit, state }) {
-      commit("SET_JWT", "");
-      Storage.cle();
+      return new Promise((resolve,reject)=>{
+        userApi.logOut().then(res=>{
+          commit("SET_JWT", "");
+          Storage.cle();
+          resolve(res)
+        }).catch(err=>{
+          reject(err)
+        })
+      })
     }
   }
 }

@@ -116,9 +116,9 @@ export default {
     //   this.goods_list = res.data.data.data
     // });
     // this.get_goods_list()
-      this.search_data.gid = this.$route.query.gid
-      this.search_data.cid1 = this.$route.query.cid1
-      this.search_data.cid2 = this.$route.query.cid2
+      this.search_data.gid = JSON.parse(this.$route.params.id).gid
+      this.search_data.cid1 = JSON.parse(this.$route.params.id).cid1
+      this.search_data.cid2 = JSON.parse(this.$route.params.id).cid2
   },
   filters:{
     sale_num(val){

@@ -16,10 +16,7 @@ module.exports = {
             '/api':{
                 target:'http://demo.acuit.net:9000',
                 ws:true,
-                changeOrigin:true,
-                pathRewrite: {
-                    '^/api':'/' 
-                  },
+                changeOrigin:true
             }
         }
     },
