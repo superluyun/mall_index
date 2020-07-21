@@ -4,7 +4,7 @@ import storage from './storage'
 import { Message } from 'element-ui'
 
 const service = axios.create({ // axios 实例
-    baseURL:'/api',
+    baseURL:process.env.NODE_ENV=='production'?'http://demo.acuit.net:9000/api':'/api', // 针对预渲染
     timeout:5000
 })
 

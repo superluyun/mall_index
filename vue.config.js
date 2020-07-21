@@ -10,7 +10,7 @@ module.exports = {
                 '@admin':path.resolve('./src/views/admin')
             }
         },
-        plugins:[
+        plugins: process.env.NODE_ENV=='production'?[
             new PrerenderSPAPlugin({
                 // Required - The path to the webpack-outputted app to prerender.
                 staticDir: path.join(__dirname, 'dist'),
@@ -26,7 +26,7 @@ module.exports = {
                     renderAfterDocumentEvent: 'render-event'
                 })
             })
-        ]
+        ]:[]
         
     }),
     devServer:{

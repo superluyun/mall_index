@@ -139,7 +139,7 @@ export default {
     quit(){
       this.$store.dispatch("logOut").then(res=>{
         this.$router.push({path:'/'})
-        window.location.href = '/'
+        location.reload()
       });
     }
   }

@@ -1,6 +1,7 @@
 <template>
-  <div id="List">
-    <div class="shop_top"><shop-head></shop-head></div>
+  <div id='store'>
+    <div class="shop_top"><shop-head :store_info.sync='store_info'></shop-head></div>
+
     <div class="search-breadcrumb width_center_1200">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -23,14 +24,12 @@
       <div class="goods_brand" ref='goods_brand'>
         <ul class="float_left" v-show="!is_checkbox">
           <li class="float_left">品牌：</li>
-          <li class="float_left" v-for="(v,i) in brand_list" :key="i"><router-link :to="{ path: `/goodslist/bids_${v.id}` }">{{v.name}}</router-link></li>
+          <li class="float_left" v-for="(v,i) in brand_list" :key="i"><a href="#" @click.stop="search_data.bids=v.id">{{v.name}}</a></li>
         </ul>
         <ul class="float_left" v-show="is_checkbox">
           <li class="float_left">品牌：</li>
-          <!-- <label>品牌：</label> -->
           <el-checkbox-group v-model="bid_list" class="float_left" style="width:970px">
              <el-checkbox v-for="(v,i) in brand_list" :label="v.id" :key="i">{{v.name}}</el-checkbox>
-             <!-- <el-checkbox> </el-checkbox> -->
           </el-checkbox-group>         
         </ul>
         <div class="float_right" >
@@ -68,21 +67,20 @@
         </ul>
       </div>
     </div>
-
-    <div class="goods_list width_center_1200" v-if="goods_list.length>0">
+    <div class="goods_list width_center_1200" v-if="goods_list.length>0" v-loading="loading">
       <div class="goods_list_item" v-for="(v,k) in goods_list" :key="k">
         <router-link :to="'/goodsinfo/'+v.id">
           <dl>
             <dt><el-image :src="v.image_url+'?x-oss-process=image/resize,h_400,w_400/quality,Q_80'" alt="" lazy></el-image></dt>
             <dd class="price">￥{{v.sale_price}} <span class="sale">已售{{v.sale_num | sale_num}}</span></dd>
             <dd class="title">{{v.name}}</dd>
-            <dd class="store"> <span class="store_name">{{v.store_name}}苹果旗舰店</span> </dd>
+            <dd class="store"> <span class="store_name">{{v.store_name}}</span> </dd>
             <dd class="purchase"><span class="icon iconfont "> 立即购买</span><span class="icon iconfont">&#xe602; 加入购物车</span></dd>
           </dl>
         </router-link>
       </div>
     </div>
-
+    
     <div class="pagination width_center_1200">
       <el-pagination
         @current-change="handleCurrentChange"
@@ -102,11 +100,11 @@ export default {
   data(){
     return{
       goods_list:[],
-      brand_list:[],
-      crumb:[],
+      store_info:{},
       categories:[],
+      crumb:[],
+      brand_list:[],
       is_checkbox:false,
-      cate_more:false,
       brand_more:false,
       bid_list:[],
       search_data:{//搜索数据
@@ -118,17 +116,18 @@ export default {
         sort:'normal',
         sort_type:''
       },
+      loading:false,
+
       total:0,
       page_size:0
     }
   },
   mounted(){
-      var id = this.$route.params.id
-      var obj = {}
-      obj[id.split('_')[0]] = id.split('_')[1]
-      this.search_data.gid = obj.gid
-      this.search_data.cid1 = obj.cid1
-      this.search_data.cid2 = obj.cid2
+    this.get_store_info()
+    this.get_store_list()
+  },
+  components:{
+    ShopHead: () => import('@/components/store/head'),
   },
   filters:{
     sale_num(val){
@@ -138,17 +137,28 @@ export default {
     }
   },
   methods:{
-    get_goods_list(){
-      
-      // console.log(this.$route.query.gid)
-      goodsApi.getList(this.search_data).then(res=>{
+    get_store_info(){
+      this.loading = true
+      goodsApi.getSotreInfo(this.$route.params.id).then(res=>{
+        this.store_info = res.data
+        this.loading = false
+        // this.categories = res.data.categories
+      })
+    },
+    get_store_list(){
+      goodsApi.getStoreList(this.search_data,this.$route.params.id).then(res=>{
         this.goods_list = res.data.goods.data
-        this.brand_list = res.data.brand
         this.crumb = res.data.crumb
         this.categories = res.data.categories
+        this.brand_list = res.data.brand
         this.total = res.data.goods.total
         this.page_size = res.data.goods.per_page
       })
+    },
+    check_bids(){
+      this.is_checkbox = !this.is_checkbox;
+      this.foo('goods_brand')
+      this.oncance()
     },
     foo(item){
       item == "goods_brand"
@@ -158,53 +168,45 @@ export default {
        ?this.$refs[item].style.height = '50px'
        :this.$refs[item].style.height = 'auto'
     },
-    check_bids(){
-      this.is_checkbox = !this.is_checkbox;
-      this.foo('goods_brand')
-      this.oncance()
+    oncance(){
+      this.bid_list = []
+      this.search_data.bids = ''
     },
     onsubmit(){
       this.search_data.bids = this.bid_list.join(',')
       // console.log(this.bid_list.join(','))
     },
-    oncance(){
-      this.bid_list = []
-      this.search_data.bids = ''
+    handleCurrentChange(val){
+      console.log(val)
     },
-    handleCurrentChange(){
-      
-    },
-  },
-  components:{
-    ShopHead: () => import('@/components/home/head'),
+    
   },
   watch:{
     search_data:{
       handler(new_data){
         // console.log(newdata)
-        this.get_goods_list()
+        this.get_store_list()
       },
       deep:true
     },
     $route:{
       handler:function(new_data,old_data){
-        var id = this.$route.params.id
-        var obj = {}
-        obj[id.split('_')[0]] = id.split('_')[1]
-        this.search_data.gid = obj.gid
-        this.search_data.cid1 = obj.cid1
-        this.search_data.cid2 = obj.cid2 
+        this.search_data.gid = new_data.query.gid
+        this.search_data.cid1 =  new_data.query.cid1
+        this.search_data.cid2 =  new_data.query.cid2   
+        this.search_data.bids = new_data.query.bids   
       },
       deep:true
     }
   }
 }
 </script>
-
 <style lang="scss" scoped>
-$mincolor: #f25c19 ;
-
-  #List{
+  $mincolor: #f25c19 ;
+  #store{
+    .shop_top{
+      height: 316px;
+    }
     .search-breadcrumb{
       margin-top: 20px;
     }
@@ -278,7 +280,7 @@ $mincolor: #f25c19 ;
     }
     .pagination{
       width: 600px;
-      margin:10px auto;
+      margin: 10px auto;
     }
   }
 

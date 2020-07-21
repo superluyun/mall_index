@@ -58,7 +58,7 @@
         </div>
         <div class="store_right">
           <div class="store_btn_one">
-            <span><i class="iconfont icon-home"></i>进入店铺</span>
+            <span> <router-link :to='`/store/${store_info.id}`'><i class="iconfont icon-home"></i>进入店铺</router-link></span>
           </div>
           <div class="store_btn_two">
             <span><i class="iconfont icon-dianhua"></i>联系商家：{{store_info.contact_phone}}</span>
@@ -151,8 +151,8 @@ export default {
     toadmin(){},
     quit(){
       this.$store.dispatch("logOut").then(res=>{
-        this.$router.push({path:'/'})
-        window.location.href = '/'
+        // this.$route.push(this.$route.path)
+        location.reload()
       });
     }
   }

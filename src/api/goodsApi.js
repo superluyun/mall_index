@@ -31,6 +31,13 @@ export default {
       params:data
     })
   },
+  // 获取店铺详情
+  getSotreInfo(id){
+    return request({
+      url:'/store/'+id,
+      method:'get'
+    })
+  },
   // 获取商品详情
   getGoodsInfo(data){
     return request({

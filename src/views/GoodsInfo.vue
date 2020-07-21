@@ -126,7 +126,7 @@ export default {
   },
   methods:{
     get_goods_info(){
-      goodsApi.getGoodsInfo(this.$route.query.id).then(res=>{
+      goodsApi.getGoodsInfo(this.$route.params.id).then(res=>{
         this.goods_info = res.data
         this.goods_images_thumb = res.data.images.map(item=> item.url)
         this.goods_images = res.data.images.map(item=>item.url)

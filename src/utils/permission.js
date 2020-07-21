@@ -4,7 +4,6 @@ import Storage from '@/utils/storage'
 
 const whiteList = ['/','/goodslist','/goodsinfo'] // 不重定向白名单
 router.beforeEach((to,from,next)=>{  
-    console.log(to)
     if(Storage.get('token')){
         if(to.path == '/login'){
             next({path:'/'}) // 重定向到首页

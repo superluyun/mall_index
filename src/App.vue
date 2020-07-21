@@ -11,6 +11,11 @@ export default {
   mounted(){
     this.getUserInfo()
   },
+  watch:{
+    $route:function(to){
+      this.getUserInfo()
+    }
+  },
   methods:{
     getUserInfo(){
       if(this.$route.query.jwt){

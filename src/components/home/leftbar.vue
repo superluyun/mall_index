@@ -75,9 +75,9 @@ export default {
     // padding:0 15px;
     .class_1{
         padding: 8px 15px 0 15px;
-        a{
-            // font-weight: bold;
-        }
+        // a{
+        //     // font-weight: bold;
+        // }
     }
     
     .class_2{

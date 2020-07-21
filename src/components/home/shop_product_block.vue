@@ -6,7 +6,7 @@
         </div>
         <div class="product_right">
             <ul>
-                <li v-for="(v,k) in goods_list.items.slice(1,Infinity)" :key="k"><router-link :to="v.link">
+                <li v-for="(v,k) in goods_list.items.slice(1,Infinity)" :key="k"><router-link :to="`/goodsinfo/${v.id}`">
                     <div class="product_act_in">
                         <dl>
                             <dt><el-image :src="v.goods.image_url" alt="" lazy></el-image></dt>
