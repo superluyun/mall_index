@@ -1,8 +1,10 @@
 const path = require("path")
 const PrerenderSPAPlugin = require('prerender-spa-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 const Renderer = PrerenderSPAPlugin.PuppeteerRenderer;
 
 module.exports = {
+    // outputDir: process.env.NODE_ENV === 'production'? '/dist_index/dist': '/',
     configureWebpack:()=>({
         resolve:{
             alias:{
@@ -39,11 +41,18 @@ module.exports = {
             }
         }
     },
-    // chainWebpack: config => { // 配置虚拟环境
-    //     config.plugin("define").tap(args => {
-    //         args[0]["process.env"].BASE_URL = JSON.stringify(process.env.BASE_URL);
-    //         return args;
-    //     });
-    // }
+    chainWebpack: config => { // 打包自动压缩 zip 与预渲染冲突
+        // setTimeout(()=>{
+            config.plugin('filemanager').use(FileManagerPlugin).tap(c=>{
+                c[0] = {}
+                c[0].onEnd = {
+                    archive:[
+                        {source:'./dist',destination:'./dist_index.zip'}
+                    ]
+                }
+                return c
+            })
+        //  },1000)
+    }
     
 }

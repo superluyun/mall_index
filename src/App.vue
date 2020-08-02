@@ -6,10 +6,22 @@
 
 <script>
 import userApi from '@/api/userApi'
+import baseApi from '@/api/baseApi'
+
 
 export default {
+  data(){
+    return {
+      meta_info:{
+        title:'',
+        keywords:'',
+        description:''
+      }
+    }
+  },
   mounted(){
-    this.getUserInfo()
+    this.getUserInfo();
+    this.get_meta_info()
   },
   watch:{
     $route:function(to){
@@ -30,6 +42,28 @@ export default {
         })
       }
     },
+    get_meta_info(){
+      baseApi.getSiteInfo().then(res=>{
+        this.meta_info.title = res.data.title
+        this.meta_info.keywords = res.data.seo_keywords
+        this.meta_info.description = res.data.seo_desc
+      })
+    }
+  },
+  metaInfo(){//设置网站 meta 信息
+    return{
+      title: this.meta_info.title, // set a title
+      meta: [
+        {                 // set meta
+          name: 'keywords',
+          content: this.meta_info.keywords
+        },
+        {
+          name:'description',
+          content:this.meta_info.description
+        }
+      ]
+    }
   }
 }
 </script>

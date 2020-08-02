@@ -24,7 +24,7 @@ export default {
       banner_list:[{url:"/images/banner/banner_home_1.png"},{url:"/images/banner/banner_home_2.png"},{url:"/images/banner/banner_home_3.png"}],
       goods_list:[],
       brand_list:[],
-      goods_list_left_adv:[],
+      goods_list_left_adv:[]
     }
   },
   components:{
@@ -34,8 +34,6 @@ export default {
     ShopProductBlock: ()=> import('@/components/home/shop_product_block'),
   },
   mounted(){
-    // this.get_goods_list()
-    // this.getUserInfo()
     this.get_goods_list()
   },
   methods:{
@@ -46,8 +44,6 @@ export default {
         this.brand_list = res.data.stores.items
       })
     },
-    
-    
   },
 }
 </script>

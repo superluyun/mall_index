@@ -13,7 +13,7 @@
       <div class="top_shop_right">
         <ul>
           <li><a href="http://demo.acuit.net" target="_blank">ERP平台</a></li>
-          <li v-if='userInfo'><a :href="`http://demo.acuit.net:9000/admin?jwt=${jwt}`" target="_blank"><i class="icon iconfont">&#xe600;</i> 我的工作台</a></li>
+          <li v-if='userInfo'><a :href="`http://localhost:8081/?jwt=${jwt}`" target="_blank"><i class="icon iconfont">&#xe600;</i> 我的工作台</a></li>
           <li><a :href="`http://demo.acuit.net:96/index.html#/login?redirect=${redirect_url}`" v-if="!userInfo.name">登录</a></li>
           <li><a href="http://demo.acuit.net:96/#/register/reg" _blank v-if="!userInfo.name">注册</a></li>
           <li><a href="tel:400-999-2350"><i class="icon iconfont">&#xe603;</i> 服务热线：400-999-2350</a></li>   
@@ -71,8 +71,11 @@
     <div class="shop_top_nav">
       <div class="width_center_1200">
         <div class="shop_top_nav_left" @mouseover="subnav=true" @mouseleave="$route.path=='/'?scrollTop?subnav=false:'':subnav=false">
-          全部商品
-          <transition name="el-zoom-in-top"><leftBar v-show="subnav" :category='category'></leftBar></transition>
+          店铺商品
+          <!-- <transition name="el-zoom-in-top"><left-bar v-show="subnav" :category='category'></left-bar></transition> -->
+          <transition name='el-zoom-in-top'>
+            <left-bar2  v-show="subnav" :category='category' :store_id='store_info.id'></left-bar2>
+          </transition>
         </div>
         <div class="shop_top_nav_right">
           <ul>
@@ -132,18 +135,17 @@ export default {
     }, true);
   },
   mounted(){
-    
     this.get_category()
   },
   components:{
-    leftBar:()=>import('@/components/home/leftbar.vue')
+    leftBar2:()=>import('@/components/home/leftbar2.vue')
   },
   computed:{
     ...mapGetters(['userInfo','jwt'])
   },
   methods:{
     get_category(){
-      goodsApi.getCategory().then(res=>{
+      goodsApi.getCategoryStore().then(res=>{
         this.category = res.data
         // console.log(this.category)
       })
@@ -336,6 +338,7 @@ export default {
       background: #fff;
       outline: 0;
       text-align: center;
+      transition: background-color 150ms;
     }
     .search_all{
       color:#fff;
@@ -343,7 +346,7 @@ export default {
     }
     .search_button:hover{
       color:#fff;
-      background:#f25c19;
+      background-color:#f25c19;
       cursor: pointer;
     }
     .index_my_car{

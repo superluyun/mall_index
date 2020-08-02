@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import Axios from 'axios'
 import '@/utils/permission'
+import mateInfo from 'vue-meta-info'
 
 import ElementUI from 'element-ui';
 import '@/assets/theme/index.css'
@@ -12,6 +13,7 @@ import '../public/fonts/iconfont.css' // 阿里图标
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.use(mateInfo)
 Vue.prototype.$axios = Axios
 
 new Vue({

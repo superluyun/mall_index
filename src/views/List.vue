@@ -76,7 +76,7 @@
             <dt><el-image :src="v.image_url+'?x-oss-process=image/resize,h_400,w_400/quality,Q_80'" alt="" lazy></el-image></dt>
             <dd class="price">￥{{v.sale_price}} <span class="sale">已售{{v.sale_num | sale_num}}</span></dd>
             <dd class="title">{{v.name}}</dd>
-            <dd class="store"> <span class="store_name">{{v.store_name}}苹果旗舰店</span> </dd>
+            <dd class="store"> <span class="store_name">{{v.store_name || '苹果旗舰店'}}</span> </dd>
             <dd class="purchase"><span class="icon iconfont "> 立即购买</span><span class="icon iconfont">&#xe602; 加入购物车</span></dd>
           </dl>
         </router-link>

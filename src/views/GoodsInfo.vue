@@ -73,8 +73,11 @@
         </div>
       </div>
       <div class="goods_info_detail float_left">
-        <div class="info_nav"></div>
-        <div class="info_table">
+        <div class="info_tab">
+          <span :class="nav_active?'nav_active':''" @click="nav_active = !nav_active">商品详情</span>
+          <span :class="!nav_active?'nav_active':''" @click="nav_active = !nav_active">售后服务</span>
+        </div>
+        <div class="info_table" v-if="nav_active">
           <div class="info_table_title"><span>核心参数</span><span></span></div>
           <div class="info_table_centent">
             <el-row>
@@ -85,8 +88,12 @@
               <el-col :span="12"><span>商品编号：{{goods_sn || '请选择商品规格'}}</span></el-col>
             </el-row>
           </div>
+          <div class="goods_info_intro" v-html="goods_info.intro"></div>
         </div>
-        <div class="goods_info_intro" v-html="goods_info.intro"></div>
+    
+        <div v-else class="after_sale">
+          <div v-html="goods_info.after_sale"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -113,6 +120,7 @@ export default {
       market_price:'',
       spec_name:'',
       num:'',// 库存
+      nav_active:true,
       
     }
   }, 
@@ -387,7 +395,7 @@ export default {
     .pic_zoom_list{
         ul li{
             float: left;
-            margin:10px 10px 10px 0; 
+            margin:10px 5px 10px 0; 
             border:1px solid #efefef;
             img{
                 width: 60px;
@@ -409,7 +417,7 @@ export default {
             line-height: 80px;
             color:#666;
             margin-right: 10px;
-            margin-left: 10px;
+            margin-left: 0px;
             :hover{
                 color:#f25c19 ;
             }
@@ -419,7 +427,7 @@ export default {
             float: right;
             line-height: 80px;
             color:#666;
-            margin-right: 10px;
+            margin-right: 0px;
             margin-left: 10px;
             :hover{
                 color:#f25c19 ;
@@ -506,10 +514,29 @@ export default {
       min-height: 800px;
       border: 1px solid #efefef;
       box-sizing: border-box;
-      .info_nav{
+      .info_tab{
         height: 70px;
         width: 100%;
         border-bottom: 1px solid #efefef;
+        span{
+          display: inline-block;
+          color:#333;
+          line-height: 70px;
+          margin-left: 25px;
+        }
+        span:hover{
+          cursor: pointer;
+        }
+        .nav_active{
+          color:#f25c19
+        }
+        .nav_active:after{
+          content: no-open-quote;
+          display: block;
+          width: 60px;
+          height:2px;
+          background-color: #f25c19;
+        }
       }
       .info_table{
         width: 800px;
@@ -544,7 +571,11 @@ export default {
         }
       }
       .goods_info_intro{
-        padding: 0 20px;
+
+        margin: 40px 0;
+      }
+      .after_sale{
+        padding:10px;
       }
     }
 }

@@ -38,6 +38,13 @@ export default {
       method:'get'
     })
   },
+  // 获取店铺商品分类
+  getCategoryStore(){
+    return request({
+      url:'/category/store/tree',
+      method:"get"
+    })
+  },
   // 获取商品详情
   getGoodsInfo(data){
     return request({

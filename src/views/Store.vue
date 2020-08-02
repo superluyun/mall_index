@@ -191,7 +191,6 @@ export default {
     },
     $route:{
       handler:function(new_data,old_data){
-        this.search_data.gid = new_data.query.gid
         this.search_data.cid1 =  new_data.query.cid1
         this.search_data.cid2 =  new_data.query.cid2   
         this.search_data.bids = new_data.query.bids   
